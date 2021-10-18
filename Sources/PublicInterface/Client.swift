@@ -237,7 +237,10 @@ public class Client: WalletConnect {
                 return
             }
 
-            guard let session = communicator.session(by: request.url) else { return }
+            guard let session = communicator.session(by: request.url) else {
+                delegate?.client(self, didFailToConnect: request.url)
+                return
+            }
 
             if !info.approved {
                 do {
