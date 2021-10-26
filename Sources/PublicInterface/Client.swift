@@ -264,8 +264,9 @@ public class Client: WalletConnect {
             }
         } else {
             // TODO: error handling
-            let response = try? Response(request: request, error: .methodNotFound)
-            try? send(response)
+            if let response = try? Response(request: request, error: .methodNotFound) {
+                try? send(response)
+            }
         }
     }
 
