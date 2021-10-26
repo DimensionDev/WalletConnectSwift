@@ -232,8 +232,7 @@ public class Client: WalletConnect {
     private func expectUpdateSessionRequest(_ request: Request) {
         if request.method == "wc_sessionUpdate" {
             guard let info = sessionInfo(from: request) else {
-                // TODO: error handling
-                try! send(Response(request: request, error: .invalidJSON))
+                try? send(Response(request: request, error: .invalidJSON))
                 return
             }
 
@@ -265,8 +264,8 @@ public class Client: WalletConnect {
             }
         } else {
             // TODO: error handling
-            let response = try! Response(request: request, error: .methodNotFound)
-            try! send(response)
+            let response = try? Response(request: request, error: .methodNotFound)
+            try? send(response)
         }
     }
 
