@@ -67,20 +67,26 @@ class WebSocketConnection {
 
 extension WebSocketConnection: WebSocketDelegate {
     func websocketDidConnect(socket: WebSocketClient) {
-        pingTimer = Timer.scheduledTimer(withTimeInterval: pingInterval, repeats: true) { [weak self] _ in
-            LogService.shared.log("WC: ==> ping")
-            self?.socket.write(ping: Data())
+        DispatchQueue.main.async {
+            self.pingTimer = Timer.scheduledTimer(withTimeInterval: self.pingInterval, repeats: true) { [weak self] _ in
+                LogService.shared.log("WC: ==> ping")
+                self?.socket.write(ping: Data())
+            }
+            self.onConnect?()
         }
-        onConnect?()
     }
 
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        pingTimer?.invalidate()
-        onDisconnect?(error)
+        DispatchQueue.main.async {
+            self.pingTimer?.invalidate()
+            self.onDisconnect?(error)
+        }
     }
 
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        onTextReceive?(text)
+        DispatchQueue.main.async {
+            self.onTextReceive?(text)
+        }
     }
 
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
