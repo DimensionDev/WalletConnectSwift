@@ -120,6 +120,23 @@ public class Client: WalletConnect {
                                   completion: @escaping RequestResponse) throws {
         try sign(url: url, method: "eth_signTypedData", param1: account, param2: message, completion: completion)
     }
+    
+    /// Request to sign typed datav4.
+    ///
+    /// https://docs.walletconnect.org/json-rpc/ethereum#eth_signtypeddata
+    ///
+    /// - Parameters:
+    ///   - url: WalletConnect url object.
+    ///   - account: String representing Ethereum address.
+    ///   - message: String representin Data to sign.
+    ///   - completion: Response with string representing signature, or error.
+    /// - Throws: client error.
+    public func eth_signTypedV4Data(url: WCURL,
+                                  account: String,
+                                  message: String,
+                                  completion: @escaping RequestResponse) throws {
+        try sign(url: url, method: "eth_signTypedData_v4", param1: account, param2: message, completion: completion)
+    }
 
     private func sign(url: WCURL,
                       method: String,
