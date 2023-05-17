@@ -239,7 +239,7 @@ public class Client: WalletConnect {
 
             guard walletInfo.approved else {
                 // TODO: handle Error
-                delegate?.client(self, didFailToConnect: response.url)
+                delegate?.client(self, didRefuseToConnect: response.url)
                 return
             }
 
@@ -247,7 +247,12 @@ public class Client: WalletConnect {
             delegate?.client(self, didConnect: session)
         } catch {
             // TODO: handle error
-            delegate?.client(self, didFailToConnect: response.url)
+            if let code = response.error?.code,
+               code == -32000 {
+                delegate?.client(self, didRefuseToConnect: response.url)
+            } else {
+                delegate?.client(self, didFailToConnect: response.url)
+            }
         }
     }
 
