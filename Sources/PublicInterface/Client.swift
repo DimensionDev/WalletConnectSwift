@@ -10,6 +10,7 @@ public protocol ClientDelegate: AnyObject {
     func client(_ client: Client, didConnect session: Session)
     func client(_ client: Client, didDisconnect session: Session)
     func client(_ client: Client, didUpdate session: Session)
+    func client(_ client: Client, didRefuseToConnect url: WCURL)
 }
 
 public protocol ClientDelegateV2: ClientDelegate {
@@ -271,7 +272,12 @@ public class Client: WalletConnect {
                 return
             }
 
-            guard let session = communicator.session(by: request.url) else { return }
+            guard let session = communicator.session(by: request.url) else {
+                if !info.approved {
+                    delegate?.client(self, didRefuseToConnect: request.url)
+                }
+                return
+            }
 
             if !info.approved {
                 do {
